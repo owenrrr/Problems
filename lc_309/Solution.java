@@ -1,0 +1,25 @@
+package lc_309;
+
+public class Solution {
+    public int maxProfit(int[] prices) {
+        if (prices.length == 1) return 0;
+        if (prices.length == 2){
+            return prices[1] > prices[0] ? prices[1] - prices[0]: 0;
+        }
+        int len = prices.length;
+        int[] hold = new int[len];
+        int[] not_hold = new int[len];
+
+        hold[0] = -prices[0];
+        hold[1] = -Math.min(prices[0], prices[1]);
+        not_hold[1] = Math.max(0, prices[1] - prices[0]);
+        int max_hold = Math.max(hold[0], hold[1]);
+
+        for (int i=2; i<len; i++){
+            hold[i] = not_hold[i-2] - prices[i];
+            max_hold = Math.max(hold[i], max_hold);
+            not_hold[i] = Math.max(not_hold[i-1], max_hold + prices[i]);
+        }
+        return not_hold[len-1];
+    }
+}
