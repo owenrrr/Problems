@@ -1,0 +1,38 @@
+package lc_313;
+
+import java.util.*;
+
+/**
+ * evolution from LC-264 Ugly Number II
+ */
+public class Solution {
+    public int nthSuperUglyNumber(int n, int[] primes) {
+        int[] ugly = new int[n];
+        ugly[0] = 1;
+
+        int[] index = new int[primes.length];
+        int[] factors = Arrays.copyOf(primes, primes.length);
+        int min = Integer.MAX_VALUE, tmp = 0;
+        List<Integer> min_p = new ArrayList<>();
+
+        for (int i=1; i<n; i++){
+            for (int j=0; j<primes.length; j++){
+                if (factors[j] == min){
+                    min_p.add(j);
+                }
+                if (factors[j] > 0 && factors[j] < min){
+                    min_p.clear();
+                    min = factors[j];
+                    min_p.add(j);
+                }
+            }
+            ugly[i] = min;
+            while (!min_p.isEmpty()){
+                tmp = min_p.remove(0);
+                factors[tmp] = primes[tmp] * ugly[++index[tmp]];
+            }
+            min = Integer.MAX_VALUE;
+        }
+        return ugly[n - 1];
+    }
+}
